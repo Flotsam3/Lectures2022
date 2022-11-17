@@ -712,7 +712,7 @@ function App(){
 Inside context/Products.js
 
 ```js
-import {useState} from "react";
+import {useState, useContext} from "react";
 import data from "../data";
 
 export const ProductsContext = createContext();
@@ -763,3 +763,28 @@ function Home(){
     )
 }
 ```
+
+<h2 style="color:#37d">Deployment</h2>
+
+CI - continuous integration /
+CD - continuous deployment
+
+Creating a new branch
+
+    git checkout -b <branch name>
+ or
+
+    git branch <branch name>
+
+At github open a pull request to merge the working branch to the main branch. The supervisor has to approve and merge the branches
+
+## Deployment with Render
+
+[Render.com](https://render.com)
+
+1. Static Sites < New Static Site
+
+2. connect a repository
+
+3. Enter data (name, root directory [empty if src], branch [], build command [$ yarn build], build [build])
+
