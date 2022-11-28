@@ -787,4 +787,76 @@ At github open a pull request to merge the working branch to the main branch. Th
 2. connect a repository
 
 3. Enter data (name, root directory [empty if src], branch [], build command [$ yarn build], build [build])
+   <br/><br/><br/>
 
+# 🔵 BACKEND (BE)
+
+### Brainstorming
+
+- im Hintergrund (Geschäftslogik / Business Logic)
+- Datenbanken (SQL / NoSQL)
+- Schnittstellenn (interfaces, API)
+- Datenverwaltung
+- Kommunikation
+- Domains
+- Server
+
+postman
+
+Execute file in node.js
+
+    - node <filename>
+    - nodemon <filename>
+  
+## CREATING A SERVER WITH PLAIN JS
+  
+```js
+import http from "http" // ES6 modules (needs additional configuration)
+
+Inside package.json:
+"type":"module"
+```
+
+```js
+const http = require("http") // common js modules
+```
+
+```js
+const server = http.createServer((request, response)=>{
+    switch(request.url){
+        case "/photos": {
+            console.log("requested photos");
+            response.setHeader("Content-Type", "application/json");
+            response.write("my photos");
+            response.end();
+        }
+    }
+});
+
+server.listen(4000);
+```
+
+## CREATING A SERVER WITH EXPRESS
+
+        npm init -y
+        npm i -D nodemon // install as devDependencies
+        npm i express
+
+Adjusting scripts in package.json
+
+    "main": "server.js",
+    "scripts": {
+        "dev":"nodemon server.js"
+        }
+
+```js
+const express = require("express");
+const server = express();
+
+server.get("/photos", (req, res) => {
+    res.json("response from server")
+    res.send("response from server") // send selects optimal data type
+});
+
+server.listen(4000);
+```
