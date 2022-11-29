@@ -807,6 +807,18 @@ Execute file in node.js
 
     - node <filename>
     - nodemon <filename>
+
+## NAMING IN URL'S
+
+<span style="color:red; font-weight:bold">Don't</span> 
+
+    /isNumber // can lead to errors on certain systems
+
+<span style="color:green; font-weight:bold">Do</span>
+
+    /isnumber
+    /is-number
+    /is_number
   
 ## CREATING A SERVER WITH PLAIN JS
   
@@ -859,4 +871,24 @@ server.get("/photos", (req, res) => {
 });
 
 server.listen(4000);
+```
+
+## request.query and request.params
+
+```js
+// url: http://localhost:4000/is-number?num=1
+
+server.get("/is_number", (req, res) => {   
+    res.send(Number(req.query.num) ? "This is a number" : "This is not a number) 
+});
+
+```
+```js
+
+// url: http://localhost:4000/is_number/1914
+
+server.get("/is_number/:num", (req, res) => {   
+    Number(req.params.num) ? res.send("This is a number") : res.send("This is not a number");
+});
+
 ```
