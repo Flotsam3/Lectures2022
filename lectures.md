@@ -892,3 +892,48 @@ server.get("/is_number/:num", (req, res) => {
 });
 
 ```
+
+## API's (Application Programming Interface)
+
+```js
+import express from "express";
+
+let testArray = [1, 2, 3];
+let users = [a, b, c];
+
+const app = express();
+
+app.post("/users", (req, res)=>{
+    testArray.push(users.length + 1)
+    res.status(201).json();
+});
+
+app.put("/users/:index", (req, res)=>{
+    const index = +req.params.index;
+    res.json(users[index]);
+});
+
+app.get("/notizen", (req, res)=>{
+    res.json();
+});
+
+app.post("/notizen", (req, res)=>{
+    testArray.push(testArray.length + 1)
+    res.json();
+});
+
+app.put("/notizen", (req, res)=>{
+    testArray.push(testArray.length - 1) * testArray(testArray.length - 1) *2;
+    res.json();
+});
+
+app.delete("/notizen", (req, res)=>{
+    testArray.pop();
+    res.status(204).end();
+});
+
+app.listen(4000, ()=>{
+    "Server running on port 4000!"
+})
+
+```
