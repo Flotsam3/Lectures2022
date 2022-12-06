@@ -863,14 +863,14 @@ Adjusting scripts in package.json
 
 ```js
 const express = require("express");
-const server = express();
+const app = express();
 
-server.get("/photos", (req, res) => {
-    res.json("response from server")
+app.get("/photos", (req, res) => {
+    res.json("response from server") // or
     res.send("response from server") // send selects optimal data type
 });
 
-server.listen(4000);
+app.listen(4000);
 ```
 
 ## request.query and request.params
@@ -941,6 +941,9 @@ app.listen(4000, ()=>{
 ## MIDDLEWARE
 
 ```js
+
+// use method gets called every time before targeting any endpoint
+
 app.use((req, res, next)=>{
     console.log(req.method, req.url);
     next();
@@ -967,14 +970,11 @@ app.get("/notizen", (req, res, next)=>{
     next();
 })
 
-// handle error
+// handle non existing url, code should come after the endpoints
 
-app.use((req, res, next)=>{
-    const serverOk = Math.random() >= 0.5;
-
-    if(!serverOK) return res.status(500).end();
-
-    next(); 
+app.use((req, res)=>{
+    console.log("404 page not found");
+    res.status(404).json("page not found").end();
 })
 
 // catch error (at end of code)
@@ -982,9 +982,11 @@ app.use((req, res, next)=>{
 app.use((error, req, res, next)=>{
     console.log(error);
     res.status(500).end();
-    next(); 
 })
 
+// middleware to parse the body data
+
+app.use(express.json())
 
 ```
 
