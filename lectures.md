@@ -937,3 +937,54 @@ app.listen(4000, ()=>{
 })
 
 ```
+
+## MIDDLEWARE
+
+```js
+app.use((req, res, next)=>{
+    console.log(req.method, req.url);
+    next();
+})
+
+// middlewware for a specific path
+
+app.use("/notizen", (req, res, next)=>{
+    console.log("Middleware für /notizen");
+    next();
+})
+
+// middleware for a specific method
+
+app.get("*", (req, res, next)=>{
+    console.log("Middleware for GET");
+    next();
+})
+
+// middleware for a specific path and method
+
+app.get("/notizen", (req, res, next)=>{
+    console.log("Middleware for GET and /notizen");
+    next();
+})
+
+// handle error
+
+app.use((req, res, next)=>{
+    const serverOk = Math.random() >= 0.5;
+
+    if(!serverOK) return res.status(500).end();
+
+    next(); 
+})
+
+// catch error (at end of code)
+
+app.use((error, req, res, next)=>{
+    console.log(error);
+    res.status(500).end();
+    next(); 
+})
+
+
+```
+
