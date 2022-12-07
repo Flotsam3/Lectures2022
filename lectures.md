@@ -990,3 +990,111 @@ app.use(express.json())
 
 ```
 
+## MODEL VIEW CONTROLLER
+
+Separating the app into three parts 
+- model for data access, 
+- view - frontend, 
+- controller - the logic behind, requests, the brain of the app
+
+### Folder structure
+- model folder
+- controller folder
+- router folder
+- in router/ photoRouter.js and albumRouter.js
+- inside controller/ albumController and photoController.js
+- main.js
+- package.json
+  .gitignore
+
+### packages
+- express
+- lowdb
+
+Inside main.js
+
+```js
+import express from "express";
+
+import albumRouter from "./router/albumRouter.js"
+import photoRouter from "./router/photoRouter.js"
+
+const server = express();
+const port = 3000;
+
+// REST photos
+
+server.use(express.json());
+
+server.use("/albums", albumRouter)
+server.use("/photos", photoRouter)
+
+server.listen(port, ()=>{
+    console.log("Server running on port" + port)
+})
+
+```
+
+in router/photoRouter.js and albumRouter.js
+
+```js
+import express from "express";
+import * as controller from "../controller/albumController.js"
+
+const router = express.Router();
+
+router
+    .get("/", controller.getAllPhotos);
+    .get("/:id", controller.getPhoto);
+    .put("/:id", controller.editPhoto);
+    .delete("/:id", controller.editPhoto);
+    .post("/", controller.savePhoto);
+
+export default router
+
+```
+
+inside controller/albumController and photoController.js
+
+```js
+import { Low } from 'lowdb'
+import { JSONFile } from 'lowdb/node'
+
+const db = new Low(new JSONFile('file.json'))
+
+
+const getAllPhotos = async (req, res)=>{
+    await db.read();
+    res.json(db.data.photos)
+    console.log(db.data.photos)
+}
+
+const getPhoto = async (req, res)=>{
+    await db.read();
+    const value = res.json(db.data.albums.find((el)=>el.id === +req.params.id));
+    res.json(value);
+}
+
+const editPhoto = async (req, res)=>{
+    await db.read();
+    const index = res.json(db.data.albums.findIndex((el)=>el.id === +req.params.id));
+    db.data.albums[index] = { ...db.data.albums[index], ...req.body }
+    await db.write();
+    res.send(`${req.params.id} updated`)
+}
+
+const deletePhoto = async (req, res)=>{
+    await db.read();
+    const index = res.json(db.data.albums.findIndex((el)=>el.id === +req.params.id));
+    db.data.albums.splice(index, 1)
+    db.write()
+    res.send(`${req.params.id} deleted`)
+}
+
+const savePhoto = async (req, res)=>{
+    const nextId = Math.max(...db.data.albuums.map(a=>a.id)) +1
+    //db.data.albums ...
+    db.write()
+    res.send(`${req.params.id} saved`)
+}
+```
