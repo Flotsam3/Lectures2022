@@ -1063,19 +1063,19 @@ import { JSONFile } from 'lowdb/node'
 const db = new Low(new JSONFile('file.json'))
 
 
-const getAllPhotos = async (req, res)=>{
+export const getAllPhotos = async (req, res)=>{
     await db.read();
     res.json(db.data.photos)
     console.log(db.data.photos)
 }
 
-const getPhoto = async (req, res)=>{
+export const getPhoto = async (req, res)=>{
     await db.read();
     const value = res.json(db.data.albums.find((el)=>el.id === +req.params.id));
     res.json(value);
 }
 
-const editPhoto = async (req, res)=>{
+export const editPhoto = async (req, res)=>{
     await db.read();
     const index = res.json(db.data.albums.findIndex((el)=>el.id === +req.params.id));
     db.data.albums[index] = { ...db.data.albums[index], ...req.body }
@@ -1083,7 +1083,7 @@ const editPhoto = async (req, res)=>{
     res.send(`${req.params.id} updated`)
 }
 
-const deletePhoto = async (req, res)=>{
+export const deletePhoto = async (req, res)=>{
     await db.read();
     const index = res.json(db.data.albums.findIndex((el)=>el.id === +req.params.id));
     db.data.albums.splice(index, 1)
@@ -1091,7 +1091,7 @@ const deletePhoto = async (req, res)=>{
     res.send(`${req.params.id} deleted`)
 }
 
-const savePhoto = async (req, res)=>{
+export const savePhoto = async (req, res)=>{
     const nextId = Math.max(...db.data.albuums.map(a=>a.id)) +1
     //db.data.albums ...
     db.write()
