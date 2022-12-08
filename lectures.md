@@ -1098,3 +1098,15 @@ export const savePhoto = async (req, res)=>{
     res.send(`${req.params.id} saved`)
 }
 ```
+
+## CORS (CROSS ORIGIN RESOURCE SHARING)
+
+Installing cors
+
+    npm i cors
+
+```js
+    const cors = require("cors");
+
+    app.use(cors({origin: "*"}));
+```
