@@ -1110,3 +1110,56 @@ Installing cors
 
     app.use(cors({origin: "*"}));
 ```
+
+## .env FILE
+
+Inside .env
+
+    PORT=3562
+
+Installing the dotenv module
+
+    npm i dotenv
+
+    import dotenv from "dotenv";
+    dotenv.config();
+
+    const port = process.env.PORT
+
+### Devlivering photos to the client
+### Getting absolute path from lokal directory (__dirname)
+
+in main.js
+
+```js
+import {fileURLToPath} from "url";
+import {dirname} from "path";
+
+const __filename = fileToURLPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+server.get("/files/photos/1", (req, res)=>{
+    res.sendFile(__dirname + "/files/photos/photo-1.jpg")
+})
+
+server.get("/files/photos/:filename", (req, res)=>{
+    res.sendFile(__dirname + `/files/photos/${req.params.filename}`)
+})
+
+```
+
+### Delivering all files from one folder
+```js
+server.use("/", express.static("./files/frontend"))
+```
+
+
+```js
+server.get("/*", (req, res)=>{
+    res.sendfile(__dirname + "/files/frontendindex.html")
+})
+```
+## Redirect if request cannot be processed
+in package.json
+
+    "proxy": "http://localhost:3200/"
