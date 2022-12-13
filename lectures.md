@@ -1163,3 +1163,67 @@ server.get("/*", (req, res)=>{
 in package.json
 
     "proxy": "http://localhost:3200/"
+
+
+# TESTING WITH JEST
+
+    npm i jest
+
+Inside package.json - scripts object
+
+    "test":"jest --watchAll"
+
+Creating two files, index.js, index.test.js
+
+Inside index.test.js
+
+```js
+const fizzBuzz = require("./index");
+
+test("fizzBuzz is a function", ()={
+    expect(fizzBuzz).toBeInstanceOf(function)
+})
+
+test("returns a number"), ()=>{
+    const result = fizzBuzz(2)
+    expect(typeof result).toBe("number")
+}
+
+test("returns conveyed number", ()=>{
+    expect(fizzBuzz(2)).toBe(2);
+    expect(fizzBuzz(7)).toBe(7);
+})
+
+test("returns fizz if number is divisible by 3"), ()=>{
+    expect(fizzBuzz(3))to.Be("fizz");
+}
+
+test("returns fizz if number is divisible by 5"), ()=>{
+    expect(fizzBuzz(5))to.Be("buzz");
+}
+
+test("returns fizzbuzz if number is divisible by 3 and 5"), ()=>{
+    expect(fizzBuzz(15))to.Be("fizzbuzz");
+}
+```
+
+Inside index.js
+
+```js
+funciton fizzBuzz(number){
+    if (number % 3 === 0 && number % 5 === 0) return "fizzbuzz";
+    if (number % 3 === 0) return "fizz";
+    if (number % 5 === 0) return "buzz";
+    return number;
+}
+
+module.exports = fizzBuzz;
+```
+
+### Grouping tests
+
+```js
+describe("divisibleBy, ()=>{
+    // space for the tests
+})
+```
