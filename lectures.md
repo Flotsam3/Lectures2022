@@ -1181,7 +1181,7 @@ Inside index.test.js
 const fizzBuzz = require("./index");
 
 test("fizzBuzz is a function", ()={
-    expect(fizzBuzz).toBeInstanceOf(function)
+    expect(fizzBuzz).toBeInstanceOf(Function)
 })
 
 test("returns a number"), ()=>{
@@ -1210,7 +1210,7 @@ test("returns fizzbuzz if number is divisible by 3 and 5"), ()=>{
 Inside index.js
 
 ```js
-funciton fizzBuzz(number){
+function fizzBuzz(number){
     if (number % 3 === 0 && number % 5 === 0) return "fizzbuzz";
     if (number % 3 === 0) return "fizz";
     if (number % 5 === 0) return "buzz";
@@ -1226,4 +1226,131 @@ module.exports = fizzBuzz;
 describe("divisibleBy, ()=>{
     // space for the tests
 })
+```
+
+## API TESTING
+
+```js
+describe("Hotel Routes Test",()=>{
+    describe("Get All Route", ()=>{
+        let response = {};
+
+        beforeAll(async()==>{
+            response = await request(server).get("/")
+        })
+
+        test("return 200"), async()=>{
+            //const response = await request(server).get("/")
+            expect(response.statusCode).toBe(200)
+        }
+
+        test("return JSON", async()=>{
+            //const response = await request(server).get("/")
+            expect(response.type).toBe("application/json")
+        })
+    })
+
+    test("unknown route return 404", async()=>{
+        const response = await request(server).get("/alskjfwjawüfslfj")
+        expect(response.statusCode).toBe(404)
+    })
+
+})
+```
+
+## ACESSING THE DATABASE
+
+via the mongoDB shell
+
+```js
+use DemoDatabase // select db
+
+db. // list collections (with tab)
+
+db.products.find() // select all products
+
+db.products.find({name:”mouse”}) // select one product
+
+db.products.insertOne({name: “microphone”, price: 89,99}) // insert one product
+
+db.createCollections(“ideas”) // create a collection
+
+db.ideas.insertMany([
+    {description: “Produktdatenbank für onlineshop”}, 
+    {tasks: “altes Backend mit Datenbank verbinden”}, 
+    {structure:{rooms: [1, 2, 3]}, guests: [“guest A”,“guest B”, “guest C”]}
+])
+
+db.ideas.deleteOne({_id: "03b3e404j5495jgjoige"})
+
+```
+## Connect to MongoDB from Node.js
+npm i mongodb
+
+Inside server.js
+
+
+```js
+import dotenv from "doenv";
+dotenv.config();
+import express from "express";
+import reportsRouter from "./routes/reports.js";
+
+const app = express();
+
+const port = process.env.PORT || 4000;
+
+app.listen(port, ()=>{
+    console.log("running on port ${port}")
+})
+
+app.use("/reports", reportsRouter)
+
+import db from "./lib/mongodb.js";
+console.log(await db.collection("reports").find().toArray());
+
+```
+
+Inside routes/reports.js
+```js
+import {Router} from "express";
+import * as reports from "../controllers/reporrts.js";
+
+const router = Router(),
+
+router.get("/", reports.getAll)
+router.get("/:id", reports.getOne)
+router.put("/:id", reports.update)
+```
+
+Inside controllers/reports.js
+```js
+import db from "./lib/mongodb.js";
+
+export const getAll = async(req, res)=>{
+    const reportsCollection = db.collection("reports");
+
+    const reports = await reportsCollection.find().toArray()
+    res.json(reports)
+}
+
+export const remove = async(req, res)=>{
+    const id = req.params.id
+    res.status(204).end()
+}
+
+```
+
+Inside lib/mongodb.js
+
+```js
+import {MongoClient, ServerApiVersion} from "mongodb";
+
+const uri = process.env.MONGODB_URI;
+
+const connection = await MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
+
+const db = connection.db(process.env.DATABASE);
+
+export default db;
 ```
