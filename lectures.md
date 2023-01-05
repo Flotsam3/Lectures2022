@@ -1354,3 +1354,133 @@ const db = connection.db(process.env.DATABASE);
 
 export default db;
 ```
+
+# SQL DATABASE
+
+db.fiddle.com
+
+<img src="./sql-schema.png">
+
+```sql
+CREATE TABLE album {
+    id int primary key auto_increment,
+    name char(50),
+    datum date,
+    beschreibung, text,
+    speicherort char(255)
+}
+
+INSERT INTO album VALUES (1, "landschaft", "2022-11-14");
+
+INSERT INTO fotograf (wohnort, name) VALUES ("Berlin", "Max Mustermann");
+
+UPDATE foto
+SET preis = 12.20
+WHERE thema = "people";
+
+DELETE FROM foto
+WHERE id = 7;
+
+DELETE FROM foto
+WHERE thema = "people";
+```
+
+## SQL Queries
+```sql
+SELECT * 
+FROM album;
+
+SELECT name 
+FROM album;
+
+SELECT id, name 
+FROM album;
+
+SELECT name 
+FROM album 
+WHERE id=1;
+
+SELECT speicherort, preis
+FROM foto
+WHERE thema = "people" AND preis > 10;
+
+SELECT name
+FROM fotograf
+WHERE wohnort = "Hamburg" OR wohnort = "Berlin";
+
+// Wildcard
+SELECT *
+FROM kamera
+WHERE marke = "iPhone"
+AND model LIKE "%Pro";
+
+SELECT *
+FROM fotograf
+WHERE name LIKE "Hans M_ller";
+
+SELECT preis, speicherort
+FROM foto
+WHERE preis > 40 AND preis < 150;
+
+SELECT preis, speicherort
+FROM foto
+WHERE preis BETWEEN 40 AND 150;
+
+SELECT *
+FROM kamera
+WHERE objektiv IS NOT null;
+
+SELECT *
+FROM foto
+LIMIT 3;
+
+SELECT *
+FROM foto
+ORDER BY datum DESC;
+
+SELECT *
+FROM foto
+ORDER BY datum ASC
+LIMIT 3;
+
+SELECT DISTINCT wohnort
+FROM fotograf;
+
+SELECT DISTINCT marke, model
+FROM kamera;
+
+//Aggregations
+
+SELECT AVG(preis)
+from foto;
+
+SELECT MAX(preis)
+FROM foto;
+
+SELECT MIN(preis)
+FROM foto;
+
+SELECT COUNT(*)
+FROM album;
+
+SELECT marke, COUNT(*)
+FROM kamera
+GROUP BY marke;
+
+// JOINS
+
+SELECT speicherort, kamera.marke, kamera.model, fotograf.name
+FROM foto
+JOIN kamera
+ON kamera_id = kamera.id
+JOIN fotograf
+ON fotograf_id = fotograf.id;
+
+SELECT speicherort, kamera.marke, kamera.model, fotograf.name
+FROM foto
+JOIN kamera
+ON kamera_id = kamera.id
+JOIN fotograf
+ON fotograf_id = fotograf.id
+WHERE foto.id = 5;
+```
