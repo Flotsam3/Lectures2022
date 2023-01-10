@@ -990,7 +990,9 @@ app.use(express.json())
 
 ```
 
-## MODEL VIEW CONTROLLER
+## MODEL VIEW CONTROLLER (MVC)
+
+<img src="./model-view-controller.png" />
 
 Separating the app into three parts 
 - model for data access, 
@@ -1010,6 +1012,7 @@ Separating the app into three parts
 ### packages
 - express
 - lowdb
+
 
 Inside main.js
 
@@ -1357,7 +1360,7 @@ export default db;
 
 # SQL DATABASE
 
-db.fiddle.com
+[db-fiddle](db-fiddle.com)
 
 <img src="./sql-schema.png">
 
@@ -1484,3 +1487,144 @@ JOIN fotograf
 ON fotograf_id = fotograf.id
 WHERE foto.id = 5;
 ```
+
+## MONGODB COMMANDS
+
+```js
+    // GET
+    const reports = await collection.find().toArray();
+
+    // GET/:id
+    const report = await collection.findOne({_id: ObjectId(req.params.id) });
+
+    // PUT
+    const result = await collection.replaceOne({_id:ObjectId(req.params.id)}, document, {upsert: true})
+
+    //PATCH
+    const result = await collection.updateOne({_id:ObjectId(req.params.id)}, {$set: data})
+
+    // DELETE
+    await collection.deleteOne({_id: ObjectId(req.params.id) });
+    if (res.deletedCount <= 0) return res.status(404).end();
+
+    // POST
+    const result = await collection.insertOne({ ...req.body });
+```
+
+## MONGOOSE
+ODM - Object Document Mapping / ORM - Object Relational Mapping
+
+Installation
+
+    npm i mongoose
+
+
+Inside Folder lib/mongoose.js
+
+```js
+import dotenv from "dotenv";
+dotenv.config();
+
+import mongoose from "mongoose";
+
+mongoose.connect(process.env.MONGODB_URI, {
+    dbName: process.env.DATABASE}
+).then(()=> console.log("connected via mongooose"))
+```
+
+Inside server.js
+```js
+import "./lib/mongoose.js";
+```
+
+Controller - inside report.js
+
+```js
+import Report from "../models/Report.js";
+
+export const getAll = async (req, res)=>{
+    const report = await Report.find();
+
+    res.json(reports);
+}
+
+export const create = async(req, res) => {
+    const data = {...req.body};
+
+    const newReport = new Report(
+        title: req.body.title,
+        description: req.body.description
+    );
+
+    const result = await newReport.save();
+    res.status(200).json(result)
+}
+```
+
+Alternative method for models/Report.js
+
+```js
+// export default Report is not used
+
+export const getAll = async()=>{
+    const reports = await Report.find();
+    return reports;
+}
+
+// Inside controllers/reports.js
+
+import * as Report from "../models/Report.js";
+
+export const getAll = async (req, res)=>{
+    const reports = await Report.getAll();
+    res.json(reports);
+}
+```
+
+Inside Folder Models/Report.js
+
+```js
+import mongoose from "mongoose";
+
+const schema = new mongoose.Schema({
+    title: {
+        type: String,
+        required: true
+    },
+    description: {
+        type: String
+    },
+    participants: {
+        type: Number
+    },
+    courseNr : {
+        type: Number,
+        unique: true
+    }
+})
+
+const Report = new mongoose.model("Report", schema);
+
+export default Report;
+```
+
+Inside models/Report_mongodb.js
+ ```js
+import db from "../lib/mongodb.js";
+import {ObjectId} from "mongodb";
+
+const collection = db.collection("reports");
+
+export const getAll = async()=>{
+    const reports = await collectionfind().toArray();
+    return reports;
+}
+
+export const replace = async (id, document) => {
+    const result = await collection.replaceOne(
+        {_id: ObjectId(id)}, document,
+    )
+
+    return result;
+}
+ ```
